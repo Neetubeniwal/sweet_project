@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Django Auth Test</title>
+</head>
+<body>
+  <h1>Register</h1>
+  <input id="regUsername" placeholder="Username">
+  <input id="regPassword" placeholder="Password" type="password">
+  <button onclick="register()">Register</button>
+
+  <h1>Login</h1>
+  <input id="loginUsername" placeholder="Username">
+  <input id="loginPassword" placeholder="Password" type="password">
+  <button onclick="login()">Login</button>
+
+  <script>
+    function register() {
+      const username = document.getElementById("regUsername").value;
+      const password = document.getElementById("regPassword").value;
+
+      fetch("http://127.0.0.1:8000/api/auth/register/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("Registered successfully!");
+        // Clear input fields
+        document.getElementById("regUsername").value = "";
+        document.getElementById("regPassword").value = "";
+      })
+      .catch(err => console.error(err));
+    }
+
+    function login() {
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+
+      fetch("http://127.0.0.1:8000/api/auth/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.token || data.message==="Login successful"){  // adjust according to your backend response
+          // Redirect to sweets page
+          window.location.href = "sweets.html";
+        } else {
+          alert("Login failed!");
+        }
+      })
+      .catch(err => console.error(err));
+    }
+  </script>
+</body>
+</html>
